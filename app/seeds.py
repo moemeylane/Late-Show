@@ -7,26 +7,40 @@ def seed_db():
     episodes_csv_path = 'app/episodes.csv'
     guests_csv_path = 'app/guests.csv'
     appearances_csv_path = 'app/appearances.csv'
-    
+
     # Seed episodes
-    with open(episodes_csv_path, mode='r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            episode = Episode(date=row['date'], number=row['number'])
-            db.session.add(episode)
+    try:
+        with open(episodes_csv_path, mode='r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                episode = Episode(date=row['date'], number=int(row['number']))  # Ensure number is an integer
+                db.session.add(episode)
+        db.session.commit()  # Commit after adding all episodes
+    except Exception as e:
+        print(f"Error seeding episodes: {e}")
+        db.session.rollback()  # Rollback if there's an error
 
     # Seed guests
-    with open(guests_csv_path, mode='r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            guest = Guest(name=row['name'], occupation=row['occupation'])
-            db.session.add(guest)
+    try:
+        with open(guests_csv_path, mode='r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                guest = Guest(name=row['name'], occupation=row['occupation'])
+                db.session.add(guest)
+        db.session.commit()  # Commit after adding all guests
+    except Exception as e:
+        print(f"Error seeding guests: {e}")
+        db.session.rollback()  # Rollback if there's an error
 
     # Seed appearances
-    with open(appearances_csv_path, mode='r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            appearance = Appearance(rating=row['rating'], episode_id=row['episode_id'], guest_id=row['guest_id'])
-            db.session.add(appearance)
-
-    db.session.commit()
+    try:
+        with open(appearances_csv_path, mode='r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                rating = int(row['rating'])  # Ensure rating is an integer
+                appearance = Appearance(rating=rating, episode_id=row['episode_id'], guest_id=row['guest_id'])
+                db.session.add(appearance)
+        db.session.commit()  # Commit after adding all appearances
+    except Exception as e:
+        print(f"Error seeding appearances: {e}")
+        db.session.rollback()  # Rollback if there's an error

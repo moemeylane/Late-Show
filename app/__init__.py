@@ -13,12 +13,16 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
+    # Import models here to ensure they are registered before migrations
+    with app.app_context():
+        from app.models import Episode, Guest, Appearance  # Import your models here
+
     from app.routes import main
     app.register_blueprint(main)
 
-    print("App initialized successfully.")  # Debugging print statement
+    print("App initialized successfully.")
 
-    # Register the custom seed command
+    # Register the custom seed command within create_app
     @app.cli.command("seed_db")
     def seed_db_command():
         """Seed the database."""
