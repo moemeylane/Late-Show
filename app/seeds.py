@@ -3,7 +3,7 @@ from app import db
 from app.models import Episode, Guest, Appearance
 
 def seed_db():
-    # Paths to your CSV files
+    # Paths to CSV files
     episodes_csv_path = 'app/episodes.csv'
     guests_csv_path = 'app/guests.csv'
     appearances_csv_path = 'app/appearances.csv'
